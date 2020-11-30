@@ -3,20 +3,20 @@ import sounddevice as sd
 from time import sleep
 from tkinter import Tk, Canvas, Label, PhotoImage
 
+speaking = False
+
 class Microphone:
 
-    def __init__(self):
-        self.speaking = False
-
     def audio_callback(self, indata, frames, time, status):
+        global speaking
         volume_norm = np.linalg.norm(indata) * 10
-        if int(volume_norm) > 2:
-            self.speaking = True
-        elif int(volume_norm) < 2:
-            self.speaking = False
+        if int(volume_norm) > 2 and speaking == False:
+            speaking = True
+        elif int(volume_norm) < 2 and speaking == True:
+            speaking = False
 
     def get_status_speaking(self):
-        return self.speaking
+        return speaking
 
     def start(self):
         with sd.InputStream(callback = self.audio_callback):
@@ -25,7 +25,7 @@ class Microphone:
 class Affichage:
 
     def __init__(self):
-        self.buffer = 500 # milliseconds
+        self.buffer = 100 # milliseconds
         self.speaking = "speaking.png"
         self.notspeaking = "not_speaking.png"
 
@@ -37,7 +37,6 @@ class Affichage:
 
     def get_image(self):
         if Microphone().get_status_speaking():
-            print("parle")
             self.img = PhotoImage(file = self.speaking)
         else:
             self.img = PhotoImage(file = self.notspeaking)
