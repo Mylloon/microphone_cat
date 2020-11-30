@@ -32,8 +32,8 @@ class Affichage:
 
     def __init__(self):
         self.buffer = 500 # milliseconds
-        self.speaking = "speaking.jpg"
-        self.notspeaking = "not_speaking.jpg"
+        self.speaking = "speaking.png"
+        self.notspeaking = "not_speaking.png"
 
     def refresh(self):
         if Microphone().get_status_speaking():
