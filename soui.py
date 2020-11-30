@@ -1,7 +1,7 @@
 import numpy as np
 import sounddevice as sd
 from time import sleep
-from tkinter import Tk, Label, PhotoImage
+from tkinter import Tk, Canvas, Label, PhotoImage
 
 class Microphone:
 
@@ -36,18 +36,22 @@ class Affichage:
         self.notspeaking = "not_speaking.png"
 
     def refresh(self):
-        if Microphone().get_status_speaking():
-            self.image.config(PhotoImage(file = self.speaking))
-        else:
-            self.image.config(PhotoImage(file = self.notspeaking))
+        self.canvas.config(image = PhotoImage(file = self.get_image()))
         self.fenetre.update_idletasks()
         self.fenetre.after(self.buffer, self.refresh)
+
+    def get_image(self):
+        if Microphone().get_status_speaking():
+            return self.speaking
+        else:
+            return self.notspeaking
     
     def start(self):
         self.fenetre = Tk()
         self.fenetre.title('Microphone')
-        self.image = Label(self.fenetre)
-        self.image.pack()
+        self.canvas = Canvas(self.fenetre)
+        self.canvas.configure(width = 1080, height = 2140)
+        self.canvas.create_image(540, 1070, image = PhotoImage(file = self.get_image()))
         
         self.refresh()
 
