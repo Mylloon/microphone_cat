@@ -37,9 +37,9 @@ class Affichage:
 
     def refresh(self):
         if Microphone().get_status_speaking():
-            self.image.config(PhotoImage(self.speaking))
+            self.image.config(PhotoImage(file = self.speaking))
         else:
-            self.image.config(PhotoImage(self.notspeaking))
+            self.image.config(PhotoImage(file = self.notspeaking))
         self.fenetre.update_idletasks()
         self.fenetre.after(self.buffer, self.refresh)
     
