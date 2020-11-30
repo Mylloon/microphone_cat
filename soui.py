@@ -36,14 +36,16 @@ class Affichage:
         self.notspeaking = "not_speaking.png"
 
     def refresh(self):
-        self.canvas.config(image = PhotoImage(file = self.get_image()))
+        self.canvas.itemconfig(self.canvas_image, image = PhotoImage(master = self.fenetre, file = self.get_image()))
         self.fenetre.update_idletasks()
         self.fenetre.after(self.buffer, self.refresh)
 
     def get_image(self):
         if Microphone().get_status_speaking():
+            print("parle")
             return self.speaking
         else:
+            print("parle pas")
             return self.notspeaking
     
     def start(self):
@@ -51,7 +53,7 @@ class Affichage:
         self.fenetre.title('Microphone')
         self.canvas = Canvas(self.fenetre)
         self.canvas.configure(width = 1080, height = 2140)
-        self.canvas.create_image(540, 1070, image = PhotoImage(file = self.get_image()))
+        self.canvas_image = self.canvas.create_image(540, 1070, image = PhotoImage(master = self.fenetre, file = self.get_image()))
         
         self.refresh()
 
