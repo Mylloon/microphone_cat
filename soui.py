@@ -72,7 +72,7 @@ class Affichage:
 
     def start(self):
         self.fenetre = Tk()
-        self.fenetre.title('Microphone')
+        self.fenetre.title('Pop cat Microphone')
         geo = self.get_ratio_img()
         if not geo:
             raise NameError("Sorry, images speaking and not_speaking don't have same ratio")
