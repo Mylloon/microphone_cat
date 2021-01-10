@@ -1,6 +1,6 @@
 import numpy as np
 import sounddevice as sd
-from time import sleep
+from time import sleep, time
 from tkinter import Tk, Canvas, Label, PhotoImage
 from PIL import Image
 
@@ -29,6 +29,8 @@ class Affichage:
         self.buffer = 100 # milliseconds
         self.speaking = "speaking.png"
         self.notspeaking = "not_speaking.png"
+        self.whatamispeakingactually = self.notspeaking
+        self.amispeaking = False
 
     def get_ratio_img(self):
         image = Image.open(self.speaking)
@@ -48,10 +50,26 @@ class Affichage:
 
     def get_image(self):
         if Microphone().get_status_speaking():
-            self.img = PhotoImage(file = self.speaking)
+            if self.amispeaking == False:
+                self.amispeaking = True
+                self.whatamispeakingactually = self.speaking
+                self.img = PhotoImage(file = self.speaking)
+                self.flash()
         else:
+            self.amispeaking = False
+            self.whatamispeakingactually = self.notspeaking
             self.img = PhotoImage(file = self.notspeaking)
     
+    def flash(self):
+        if self.amispeaking == True:
+            if self.whatamispeakingactually == self.notspeaking:
+                self.whatamispeakingactually = self.speaking
+                self.img = PhotoImage(file = self.speaking)
+            else:
+                self.whatamispeakingactually = self.notspeaking
+                self.img = PhotoImage(file = self.notspeaking)
+            self.fenetre.after(self.buffer, self.flash)
+
     def start(self):
         self.fenetre = Tk()
         self.fenetre.title('Microphone')
