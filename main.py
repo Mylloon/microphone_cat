@@ -21,9 +21,9 @@ class Microphone:
 
     def start(self):
         with sd.InputStream(callback = self.audio_callback):
-            Affichage().start()
+            Display().start()
 
-class Affichage:
+class Display:
 
     def __init__(self):
         self.buffer = 100 # milliseconds
