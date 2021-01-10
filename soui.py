@@ -2,6 +2,7 @@ import numpy as np
 import sounddevice as sd
 from time import sleep
 from tkinter import Tk, Canvas, Label, PhotoImage
+from PIL import Image
 
 speaking = False
 
@@ -29,6 +30,16 @@ class Affichage:
         self.speaking = "speaking.png"
         self.notspeaking = "not_speaking.png"
 
+    def get_ratio_img(self):
+        image = Image.open(self.speaking)
+        image2 = Image.open(self.notspeaking)
+        width, height = image.size
+        width2, height2 = image2.size
+        if width != width2 or height != height2:
+            return None
+        else:
+            return f"{width}x{height}"
+
     def refresh(self):
         self.get_image()
         self.label.config(image = self.img)
@@ -44,7 +55,11 @@ class Affichage:
     def start(self):
         self.fenetre = Tk()
         self.fenetre.title('Microphone')
-        self.fenetre.geometry("357x697")
+        geo = self.get_ratio_img()
+        if not geo:
+            raise NameError("Sorry, images speaking and not_speaking don't have same ratio")
+        self.fenetre.geometry(geo)
+        self.fenetre.resizable(0, 0)
         self.get_image()
         self.label = Label(self.fenetre, image = self.img)
         self.label.pack(fill = "both", expand = "yes")
